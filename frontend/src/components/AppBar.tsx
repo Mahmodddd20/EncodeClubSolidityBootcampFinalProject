@@ -8,16 +8,22 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAccount, useDisconnect } from 'wagmi'
 import { useRouter, usePathname } from 'next/navigation'
+import { useTheme } from '@mui/material/styles';
 
 export default function ButtonAppBar() {
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const router = useRouter()
   const pathname = usePathname()
+  const theme = useTheme();
+  const handleDisconnect = () => {
+    disconnect();
+    router.push('/')
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ backgroundColor: theme.palette.secondaryOrange500 }}>
         <Toolbar>
           <IconButton
             size="large"
@@ -32,12 +38,12 @@ export default function ButtonAppBar() {
             Piggy Bank
           </Typography>
           {pathname !== '/connect' &&
-            <Button color="inherit" onClick={() => isConnected ? disconnect() : router.push('/connect')}>
+            <Button color="inherit" onClick={() => isConnected ? handleDisconnect() : router.push('/connect')}>
               {isConnected ? 'Disconnect' : 'Connect your wallet'}
             </Button>}
 
         </Toolbar>
       </AppBar>
-    </Box>
+    </Box >
   );
 }
